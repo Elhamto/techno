@@ -1,6 +1,6 @@
 import express from 'express';
 import expressPlayground from "graphql-playground-middleware-express";
-const graphqlPlayground=expressPlayground.default;
+const graphqlPlayground = expressPlayground.default;
 import { ApolloServer } from 'apollo-server-express';
 import { GraphQLLocalStrategy, buildContext } from 'graphql-passport';
 import 'dotenv/config'
@@ -11,8 +11,11 @@ import passport from 'passport';
 import User from './User.mjs';
 import typeDefs from './typeDefs.mjs';
 import resolvers from './resolvers.mjs';
-import './utils/db';
-import schema from './schema';
+
+const route = require("./routes");  ///////////////////////ME
+
+
+mongoose.connect(process.env.MONGODB_URI);
     
 passport.use(
   new GraphQLLocalStrategy((email, password, done) => {
@@ -44,47 +47,33 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.json()); ///////////////////////ME
+route(app); ///////////////////////ME
+
+app.get("/", (req, res) => { ///////////////////////ME
+    return res.send(`welcome to my app,
+        Routes: 
+            user crud: localhost:${process.env.PORT}/api/user 
+            AND
+            user list: localhost:${process.env.PORT}/api/user/list`)
+})
 
 const server = new ApolloServer({
-  schema,
-  cors: true,
-  introspection: true,
-  tracing: true,
-  path: '/',
+  typeDefs,
+  resolvers,
+  context: ({ req, res }) => buildContext({ req, res, User }),
+  // context: ({ req }) => ({
+  //   getUser: () => req.user,
+  //   logout: () => req.logout(),
+  // }),
 });
-
-// const server = new ApolloServer({
-//   typeDefs,
-//   resolvers,
-//   context: ({ req, res }) => buildContext({ req, res, User }),
-//   // context: ({ req }) => ({
-//   //   getUser: () => req.user,
-//   //   logout: () => req.logout(),
-//   // }),
-// });
 await server.start();
-// server.applyMiddleware({ app });
-server.applyMiddleware({
-  app,
-  path: '/',
-  cors: true,
-  onHealthCheck: () =>
-      // eslint-disable-next-line no-undef
-      new Promise((resolve, reject) => {
-          if (mongoose.connection.readyState > 0) {
-              resolve();
-          } else {
-              reject();
-          }
-      }),
-});
-
+server.applyMiddleware({ app });
 
 app.get("/playground", graphqlPlayground({ endpoint: "/graphql" }));
     
 app.listen({ port: process.env.PORT || 3000}, () => {
   console.log(`🚀 Server ready at http://localhost:${process.env.PORT}/playground `);
-  console.log(`😷 Health checks available at ${process.env.HEALTH_ENDPOINT}`);
 });
 // await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 // console.log(`🚀 Server ready at http://localhost:4000/playground                                                                                                                         `);
