@@ -1,7 +1,7 @@
-'use strict';
+import router from "./user.mjs"
 
 const routeAPIDefiner = [
-    ["/user", require("./user")]
+    ["/user", router]
 ]
 
 const route = function (app) {

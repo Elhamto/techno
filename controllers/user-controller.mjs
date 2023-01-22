@@ -1,13 +1,12 @@
-'use strict';
 
-const userService = require('../services/user-service');
+import userService from '../services/user-service.mjs';
 
 class UserController {
 
     async addUser(req, res) {
         const user = req.body
         try {
-            const user = await userService.adduser(user)
+            const user = await userService.addUser(user)
             return res.status(200).send(user)
         } catch (error) {
             return res.status(404).send({
@@ -19,7 +18,7 @@ class UserController {
 
     async getUser(req, res) {
         try {
-            const result = await userService.getuser(req.body.title);
+            const result = await userService.getUser(req.body.title);
             return res.status(200).json(result)
         } catch (error) {
             return res.status(400).json(error.message)
@@ -28,7 +27,7 @@ class UserController {
 
     async allUser(res) {
         try {
-            const result = await userService.alluser();
+            const result = await userService.allUser();
             return res.status(200).json(result)
         } catch (error) {
             return res.status(400).json(error.message)
@@ -38,7 +37,7 @@ class UserController {
     async updateUser(req, res) {
         const user = req.body
         try {
-            const result = await userService.updateuser(user);
+            const result = await userService.updateUser(user);
             return res.status(200).json(result)
         } catch (error) {
             return res.status(400).json(error.message)
@@ -47,7 +46,7 @@ class UserController {
 
     async removeUser(req, res) {
         try {
-            const result = await userService.removeuser(req.body.title);
+            const result = await userService.removeUser(req.body.title);
             return res.status(200).json(result)
         } catch (error) {
             return res.status(400).json(error.message)
@@ -56,4 +55,4 @@ class UserController {
 
 }
 
-export default new UserController();
+export const userCntrl = new UserController();
