@@ -7,7 +7,9 @@ class UserService {
         return cteateUser
     }
 
-    getUser(title) {
+    async getUsers(id) { //get currentUser
+        const user = await User.findOne({ _id: id })
+        return user
     }
 
     updateUser(user) {

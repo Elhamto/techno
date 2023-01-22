@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 const typeDefs = gql`
   type User {
     id: String
+    username: String
     firstName: String
     lastName: String
     email: String
@@ -14,7 +15,7 @@ const typeDefs = gql`
   }
   type Mutation {
     login(email: String!, password: String!): AuthPayload
-    signup(firstName: String!, lastName: String!, email: String!, password: String!): AuthPayload
+    signup(username: String, firstName: String!, lastName: String!, email: String!, password: String!): AuthPayload
     logout: Boolean
   }
 `;
