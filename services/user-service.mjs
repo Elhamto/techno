@@ -7,15 +7,18 @@ class UserService {
         return cteateUser
     }
 
-    async getUsers(id) { //get currentUser
-        const user = await User.findOne({ _id: id })
+   async getUsers() { //get currentUser
+        const user = await User.find()
         return user
     }
 
-    updateUser(user) {
+    async updateUser(username, firstName, lastName, email) {
+        return await User.updateOne({ username: username }, { firstName: firstName })
     }
 
-    removeUser(title) {
+    async removeUser(username) {
+        return await User.deleteOne({username: username}, function (err) {
+            if (err) return handleError(err);})
     }
 
 }

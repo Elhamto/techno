@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.route('/')
-    .get(userCntrl.getUser)
+    .get(userCntrl.getUsers)
     .post(userCntrl.addUser)
     .patch(userCntrl.updateUser)
     .delete(userCntrl.removeUser);

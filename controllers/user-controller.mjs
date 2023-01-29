@@ -6,8 +6,8 @@ class UserController {
     async addUser(req, res) {
         const user = req.body
         try {
-            const user = await userService.addUser(user)
-            return res.status(200).send(user)
+            const userObj = await userService.addUser(user)
+            return res.status(200).send(userObj)
         } catch (error) {
             return res.status(404).send({
                 status: 'error',
@@ -16,9 +16,9 @@ class UserController {
         }
     }
 
-    async getUser(req, res) {
+    async getUsers(req, res) {
         try {
-            const result = await userService.getUser(req.body.title);
+            const result = await userService.getUsers();
             return res.status(200).json(result)
         } catch (error) {
             return res.status(400).json(error.message)

@@ -11,15 +11,15 @@ import passport from 'passport';
 // import User from './User.mjs';
 import userService from './services/user-service.mjs';
 import typeDefs from './typeDefs.mjs';
-import resolvers from './resolvers.mjs';
+import resolvers from './resolvers/user-resolvers.mjs';
 
 import route from "./routes/index.mjs";
 
 mongoose.connect(process.env.MONGODB_URI);
 
 passport.use(
-  new GraphQLLocalStrategy((email, password, done) => {
-    const users = userService.getUsers();
+  new GraphQLLocalStrategy(async (email , password, done) => {
+    const users = await userService.getUsers();
     const matchingUser = users.find(user => email === user.email && password === user.password);
     const error = matchingUser ? null : new Error('no matching user');
     done(error, matchingUser);
@@ -47,10 +47,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.json()); ///////////////////////ME
-route(app); ///////////////////////ME
+app.use(express.json()); 
+route(app);
 
-app.get("/", (req, res) => { ///////////////////////ME
+app.get("/", (req, res) => {
   return res.send(`welcome to my app,
         Routes: 
             user crud: localhost:${process.env.PORT}/api/user 
